@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomePage</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #343a40;
+            padding-top: 20px;
+        }
+
+        .sidebar a {
+            color: white;
+            padding: 15px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar a:hover {
+            background-color: #575d63;
+        }
+
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: #343a40;
+            color: white;
+            padding: 10px 20px;
+            position: fixed;
+            width: calc(100% - 250px);
+            left: 250px;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .card {
+            margin: 20px 0;
+        }
+
+        .card-body h3 {
+            font-weight: 700;
+            color: #343a40;
+        }
+
+        .table th {
+            background-color: #343a40;
+            color: white;
+        }
+
+        .badge-success {
+            background-color: #28a745;
+        }
+
+        .badge-primary {
+            background-color: #007bff;
+        }
+
+        .badge-danger {
+            background-color: #dc3545;
+        }
+
+        .badge-black {
+            background-color: #343a40;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .form-control {
+            border-radius: 0;
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .image-container img {
+            max-width: 200px;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .image-container p {
+            max-width: 200px;
+            text-align: center;
+        }
+         
+         .contact-card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-avatar {
+            width: 50px;
+            height: 50px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .contact-details {
+            flex-grow: 1;
+        }
+
+        .actions {
+            text-align: right;
+        }
+
+        .actions a {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="card-body">
+            <h3 class="text-center">
+                Bienvenue, <span class="text-primary font-weight-bold"></span>!
+                <div class="mb-3"></div>
+                <p class="lead">Consultez et gérez vos contacts facilement. Vous pouvez ajouter un nouveau contact, et supprimer un contact si nécessaire. Utilisez les filtres pour trouver rapidement ce que vous cherchez.</p>
+
+                <div class="image-container">
+                    <div>
+                        <img src="/images/amis.webp" alt="Congé été">
+                    </div>
+                    <div>
+                        <img src="/images/collegue.jpg" alt="Congé hiver">
+                    </div>
+                    <div>
+                        <img src="/images/famille.png" alt="Congé printemps">
+                    </div>
+                </div>
+                <br>
+                <h3 class="mb-5 text-center">
+                    <u>Liste des Contacts</u>
+                </h3>
+                <!-- Zone de recherche -->
+                <div class="search-container">
+                    <form class="form-inline">
+                        <div class="form-group mx-sm-3 mb-2" th:action="@{/contact/homePage}" method="get">
+                            <label for="motCle" class="sr-only">Nom</label>
+                            <input type="text" class="form-control" id="motCle" th:name="motCle" placeholder="Taper Nom" th:value="${motCle}">
+                        </div>
+
+                        <div class="form-group mx-sm-3 mb-2">
+                            <label for="type" class="mr-2">Type de contact :</label>
+                            <select class="form-control" id="type" th:name="type" >
+                                <option th:value="tout">Sélectionner un type</option>
+                                <option th:value="Personnel">Personnel</option>
+                                <option th:value="Professionnel">Professionnel</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary mb-2">Rechercher</button>
+                    </form>
+                </div>
+
+			<div class="container spacer">
+        	<div th:each="p : ${contact}" class="contact-card">
+            <div class="contact-avatar" th:text="${p.name.substring(0, 1).toUpperCase()}"></div>
+            <div class="contact-details">
+                <h5 th:text="${p.name}"></h5>
+                <p>Numéro: <span th:text="${p.number}"></span></p>
+                <p><span th:text="${p.type}"></span></p>
+            </div>
+            <div class="actions">
+                <a th:href="@{edit(id=${p.id})}" class="btn btn-sm btn-warning">
+                    <i class="fas fa-edit"></i> Éditer
+                </a>
+                <a onclick="return confirm('Confirmez-vous la suppression de ce contact?')" th:href="@{delete(id=${p.id})}" class="btn btn-sm btn-danger">
+                    <i class="fas fa-trash-alt"></i> Supprimer
+                </a>
+            </div>
+        </div>
+    </div>
+            </div>
+        </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
